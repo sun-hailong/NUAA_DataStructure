@@ -1,0 +1,71 @@
+一、涉及数据结构
+时间（Time）：
+typedef struct Time
+{
+    int Year;
+    int Month;
+    int Day;
+    int Hour;
+    int Minute;
+    int Second;
+} Time ;
+仅分秒时间（MSTime）
+typedef struct MSTime
+{
+    int minute;
+    int second;
+} MSTime ;
+进程信息(ProInfo)
+typedef struct ProcessInfo
+{
+	DWORD  ID ;                             //进程ID,DWORD
+	TCHAR    Name[MAX_PATH];     //进程名称,TCHAR
+	SIZE_T    Memory;                       //进程占用内存,以K为单位
+	Time      BeginTime;                    //进程开始时间,Time
+	MSTime    DuraTime;                        //进程持续时间,int (min)
+	Time      EndTime;		//进程结束时间,Time
+} ProInfo ;
+
+其他：
+DWORD 当int看和用就可以
+TCHAR a[] 字符串，输出时用printf(“%ws”)    [后面直接加]\n好像有问题]
+SIZE_T 	当int看何用就可以
+EndTime  实际没什么意义，需要自己运算，因为获取到的都是当前在运行的进程，他们的这一项都是1601.....(UTC时间转北京时间的0点)。。。
+
+二、涉及函数和说明
+1、bool AdjustPurview()
+提升权限，得到获取进程信息的许可，务必在使用其他函数前先调用
+成功返回TRUE，失败返回FALSE
+2、bool GetCurrentProcesses(ProInfo pil[] ,  int& pronum , int sizeofpil = 1024 )  
+获取当前进程（去除ID为0的无意义信息），存入pil数组（从0号单元开始）,pronum记录存入数组的元素个数，sizeofpil传入pil数组可以存储的元素个数（默认1024）
+成功返回TRUE,失败返回FALSE
+3、void PrintTime(Time T)
+打印Time类型的数据
+4、void PrintProInfo(ProInfo PI)
+打印ProInfo类型的数据
+5、void GetSystime(Time &systime)
+返回系统时间到systime
+6、int MSTimeCMP(MSTime A , MSTime B)
+比较A,B的大小并返回结果（A>B返回1，A=B返回0，A<B返回-1）
+7、void ProInfoCPY(ProInfo &A,ProInfo B)
+把B复制到A
+8、TimeCPY(Time &A , Time B)
+把B复制到A
+
+//
+以下是原有的库的函数（可能用到？）
+_tcscpy(A,B)
+把TCHAR型字符数组B复制到A
+同strcmp
+_wcsicmp(A,B)
+比较TCHAR型字符数组A,B
+返回同strcmp
+
+三、Demo
+(见实例程序)
+
+四、其他
+PID 是进程的唯一标识，但是在进程结束后其会被系统回收，分配给其他的新开始的进程
+
+五、
+MADE BY ZZX
